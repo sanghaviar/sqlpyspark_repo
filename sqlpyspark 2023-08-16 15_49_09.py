@@ -7,7 +7,6 @@ data = [(1,'maher','male',20000,'IT'),
         (6,'Saraf','male',20000,'IT')]
 schema = ['id','name','gender','salary','dep']
 df = spark.createDataFrame(data,schema)
-# df.show()
 # For each dept what is count of employee
 df1 = df.groupby('dep').count()
 # df1.show()
