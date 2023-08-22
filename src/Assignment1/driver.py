@@ -1,7 +1,8 @@
 
 from pyspark.sql.types import StructField,StructType,IntegerType,StringType
 from pyspark.sql import SparkSession
-from src.Assignment1 import util
+# from src.Assignment1 import util
+from util import *
 
 spark = SparkSession.builder.getOrCreate()
 
@@ -26,4 +27,11 @@ data = [
 # schema = ['name','dob','gender','salary']
 df = spark.createDataFrame(data,schema)
 
-util.quest1(df)
+fun1 = add_column(df)
+fun2 = changing_values(fun1)
+fun3 = change_dataType(fun2)
+fun4 = derive_column(fun3)
+fun5 = rename_nested_column(fun4)
+fun6 = distict_column(fun5)
+fun7 = drop_column(fun6)
+# util.quest1(df)
