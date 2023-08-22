@@ -1,5 +1,5 @@
 from pyspark.sql import SparkSession
-from src.Assignment2 import util
+from util import *
 spark = SparkSession.builder.getOrCreate()
 
 
@@ -12,5 +12,6 @@ data = [('Banana',1000,'USA'),
         ('Carrots',1200,'China')]
 schema = ('Product','Amount','Country')
 df =spark.createDataFrame(data,schema)
-util.pivot_asgn(df)
-util.unpivoted_df(df)
+fun1 = pivot_fun(df)
+fun2 = unpivoit_fun(fun1)
+

@@ -12,7 +12,9 @@ data = [('James','Sales',3000),
         ('Kumar','Marketing',2000)]
 schema = ['employee_name','department','salary']
 df = spark.createDataFrame(data,schema)
-ques3(df)
+fun1 = first_row(df)
+fun2 = highest_salary(df)
+fun3 = agg_fun(df,fun1,fun2)
 
 
 

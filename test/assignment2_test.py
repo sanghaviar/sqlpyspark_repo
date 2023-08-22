@@ -4,64 +4,44 @@ from src.Assignment2 import util
 from pyspark.sql import SparkSession
 spark = SparkSession.builder.getOrCreate()
 
-def test_pivot_asgn(df):
+def test_pivot_fun(df):
     pivotDF = df.groupBy("Product").pivot("Country").sum("Amount")
+    # pivotDF.show()
+    return pivotDF
+
+def test_unpivoit_fun(pivotDF):
     unpivotexp = "stack(5,'China',China,'INDIA',INDIA,'Swedan',Swedan,'UAE',UAE,'UK',UK) as (Country,Total)"
 
     unPivotDF = pivotDF.select("Product", expr(unpivotexp)) \
         .where("Total is not null")
-    #unPivotDF.show(truncate=False)
+    # unPivotDF.show(truncate=False)
     return unPivotDF
 
+
+data =  [('Rice', 2000, 'USA'),
+        ('Sugar', 1500, 'INDIA'),
+        ('Ragi', 1600, 'Swedan'),
+        ('Wheat', 2000, 'UK'),
+        ('Bajra',3000, 'UAE'),
+        ('Millets',9000, 'China'),
+        ('Jowar', 1900, 'China')]
+schema = ('Product', 'Amount', 'Country')
+df = spark.createDataFrame(data, schema)
+
+fun1 = test_pivot_fun(df)
+fun2 = test_unpivoit_fun(fun1)
 class MyTestCase(unittest.TestCase):
     def test_case1(self):
-        data = [('Banana', 1000, 'USA'),
-                ('Carrots', 1500, 'INDIA'),
-                ('Beans', 1600, 'Swedan'),
-                ('Orange', 2000, 'UK'),
-                ('Orange', 2000, 'UAE'),
-                ('Banana', 400, 'China'),
-                ('Carrots', 1200, 'China')]
-        schema = ('Product', 'Amount', 'Country')
-        df = spark.createDataFrame(data, schema)
 
-        x = util.pivot_asgn(df)
-        expected_output = test_pivot_asgn(df)
-
-        self.assertEqual(x.collect(),expected_output.collect())
-
+        actual_output  = util.pivot_fun(df)
+        expected_output = test_pivot_fun(df)
+        self.assertEqual(actual_output.collect(),expected_output.collect())
 
     def test_case2(self):
-        data = [('Rice', 2000, 'USA'),
-                ('Sugar', 1500, 'INDIA'),
-                ('Ragi', 1600, 'Swedan'),
-                ('Wheat', 2000, 'UK'),
-                ('Bajra',3000, 'UAE'),
-                ('Millets',9000, 'China'),
-                ('Jowar', 1900, 'China')]
-        schema = ('Product', 'Amount', 'Country')
-        df = spark.createDataFrame(data, schema)
+        actual_output = util.unpivoit_fun(fun1)
+        expected_output = test_unpivoit_fun(fun1)
+        self.assertEqual(actual_output.collect(), expected_output.collect())
 
-        x = util.pivot_asgn(df)
-        expected_output = test_pivot_asgn(df)
-
-        self.assertEqual(x.collect(),expected_output.collect())
-
-    def test_case3(self):
-        data = [('Carrot', 2000, 'USA'),
-                ('Radish', 1500, 'INDIA'),
-                ('Beetroot', 1600, 'Swedan'),
-                ('Tomato', 2000, 'UK'),
-                ('Potato', 3000, 'UAE'),
-                ('Brinjal', 9000, 'China'),
-                ('Beans', 1900, 'China')]
-        schema = ('Product', 'Amount', 'Country')
-        df = spark.createDataFrame(data, schema)
-
-        x = util.pivot_asgn(df)
-        expected_output = test_pivot_asgn(df)
-
-        self.assertEqual(x.collect(), expected_output.collect())
 
 
 
